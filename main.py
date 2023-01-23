@@ -1,5 +1,7 @@
 from predict_model import *
 from flask import Flask, jsonify, request
+import os
+
 app = Flask(__name__)
 
 @app.route("/")

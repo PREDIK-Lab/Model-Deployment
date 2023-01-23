@@ -22,8 +22,6 @@ tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.1
 tensorflow==2.11.0
 tensorflow-estimator==2.11.0
-tensorflow-intel==2.11.0
-tensorflow-io-gcs-filesystem==0.29.0
 Werkzeug==1.0.1
 yahoo-earnings-calendar==0.6.0
 yfinance==0.2.4

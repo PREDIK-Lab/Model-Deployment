@@ -1,69 +1,111 @@
-import numpy as np
 import pandas as pd
 import yfinance as yf
+from yahoo_earnings_calendar import YahooEarningsCalendar
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM
 import tensorflow as tf
 from tensorflow import keras
-from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.losses import MeanSquaredError
+import pandas as pd
+import numpy as np
+import math
+import datetime
+import json
 
 def predict_model():
-    df = yf.download(tickers=['BBYB.JK'], period='3y')
-    y = df['Close'].fillna(method='ffill').values.reshape(- 1, 1)
+    # Fetch the data
+    ticker = 'BBYB.JK'
 
-    # scale the data
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    scaler = scaler.fit(y)
-    y = scaler.transform(y)
+    # last_week_date = datetime.today() - timedelta(days = 7)
+    # last_week_date_format = datetime.strptime(last_week_date, '%Y-%m:%d')
+    # csv_data = yf.download(ticker, '2017-01-01', last_week_date_format)
+    # csv_data.head()
 
-    # generate the training sequences
-    n_forecast = 1 
-    n_lookback = 60
+    # current_date = datetime.today()
+    # current_date_format = datetime.strptime(current_date, '%Y-%m:%d')
+    # csv_data = yf.download(ticker, '2017-01-01', last_week_date_format)
+    # csv_data.head()
 
-    X = []
-    Y = []
+    current_date = datetime.date.today()
+    csv_data = yf.download(ticker, '2017-01-01', '2023-01-18')
+    csv_data.head()
 
-    for i in range(n_lookback, len(y) - n_forecast + 1):
-        X.append(y[i - n_lookback: i])
-        Y.append(y[i: i + n_forecast])
+    # Create the data
+    csv_data['TradeDate']=csv_data.index
+    
+    # Plot the stock prices
+    # csv_data.plot(x='TradeDate', y='Close', kind='line', figsize=(20,6), rot=20)
 
-    X = np.array(X)
-    Y = np.array(Y)
+    FullData=csv_data[['Close']].values
+    # print(FullData[-15:])
+    
+    # Feature Scaling for fast training of neural networks
+    from sklearn.preprocessing import StandardScaler, MinMaxScaler
+    
+    # Choosing between Standardization or normalization
+    sc=MinMaxScaler()
+    
+    DataScaler = sc.fit(FullData)
+    X=DataScaler.transform(FullData)
 
-    model = keras.models.load_model('./bbybjk_model.h5')
+    # Making predictions on test data
+    Last10DaysPrices = FullData[-22:-7]
+    real_seven_days = FullData[-7:]
 
-    # generate the multi-step forecasts
-    n_future = 7
-    y_future = []
+    # Reshaping the data to (-1, 1) because its a single entry
+    Last10DaysPrices=Last10DaysPrices.reshape(-1, 1)
+    
+    # Scaling the data on the same level on which model was trained
+    X_test=DataScaler.transform(Last10DaysPrices)
 
-    x_pred = X[-1:, :, :]  # last observed input sequence
-    y_pred = Y[-1]         # last observed target value
+    NumberofSamples=1
+    TimeSteps=X_test.shape[0]
+    NumberofFeatures=X_test.shape[1]
+    # Reshaping the data as 3D input
+    X_test=X_test.reshape(NumberofSamples,TimeSteps,NumberofFeatures)
 
-    for i in range(n_future):
-        # feed the last forecast back to the model as an input
-        x_pred = np.append(x_pred[:, 1:, :], y_pred.reshape(1, 1, 1), axis=1)
+    regressor = keras.models.load_model('/content/drive/MyDrive/bbybjk_training_model.h5')
+    
+    # Generating the predictions for next 5 days
+    Next5DaysPrice = regressor.predict(X_test)
 
-        # generate the next forecast
-        y_pred = model.predict(x_pred)
+    # Generating the prices in original scale
+    Next5DaysPrice = DataScaler.inverse_transform(Next5DaysPrice)
 
-        # save the forecast
-        y_future.append(y_pred.flatten()[0])
+    print(Next5DaysPrice)
+    print(real_seven_days)
 
-    # transform the forecasts back to the original scale
-    y_future = np.array(y_future).reshape(-1, 1)
-    y_future = scaler.inverse_transform(y_future)
+    mse_loss = MeanSquaredError()
 
-    # organize the results in a data frame
-    df_past = df[['Close']].reset_index()
-    df_past.rename(columns={'index': 'Date'}, inplace=True)
-    df_past['Date'] = pd.to_datetime(df_past['Date'])
-    df_past['Forecast'] = "null"
+    # Making predictions on test data
+    Last10DaysPrices=FullData[-15:]
+                    #np.array([1376.2, 1371.75,1387.15,1370.5 ,1344.95, 1312.05, 1316.65, 1339.45, 1339.7 ,1340.85])
+    
+    # Reshaping the data to (-1,1 )because its a single entry
+    Last10DaysPrices=Last10DaysPrices.reshape(-1, 1)
+    
+    # Scaling the data on the same level on which model was trained
+    X_test=DataScaler.transform(Last10DaysPrices)
+    
+    NumberofSamples=1
+    TimeSteps=X_test.shape[0]
+    NumberofFeatures=X_test.shape[1]
+    # Reshaping the data as 3D input
+    X_test=X_test.reshape(NumberofSamples,TimeSteps,NumberofFeatures)
 
-    df_future = pd.DataFrame(columns=['Date', 'Close', 'Forecast'])
-    df_future['Date'] = pd.date_range(start=df_past['Date'].iloc[-1] + pd.Timedelta(days=1), periods=n_future)
-    df_future['Forecast'] = y_future.flatten()
-    df_future['Close'] = "null"
+    regressor = keras.models.load_model('/content/drive/MyDrive/bbybjk_training_model.h5')
+    
+    # Generating the predictions for next 5 days
+    Next5DaysPrice = regressor.predict(X_test)
 
-    # return df_future['Forecast']
+    # Generating the prices in original scale
+    Next5DaysPrice = DataScaler.inverse_transform(Next5DaysPrice)
 
-    results = df_past.append(df_future).set_index('Date')
+    json_str = json.dumps({
+        "prediksi": Next5DaysPrice.tolist()
+    })
 
-    return results.values.tolist()
+    return json_str

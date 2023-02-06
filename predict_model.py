@@ -9,6 +9,7 @@ from keras.layers import LSTM
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.losses import MeanSquaredError
+from sklearn.metrics import mean_squared_error
 import pandas as pd
 import numpy as np
 import math
@@ -19,18 +20,8 @@ def predict_model():
     # Fetch the data
     ticker = 'BBYB.JK'
 
-    # last_week_date = datetime.today() - timedelta(days = 7)
-    # last_week_date_format = datetime.strptime(last_week_date, '%Y-%m:%d')
-    # csv_data = yf.download(ticker, '2017-01-01', last_week_date_format)
-    # csv_data.head()
-
-    # current_date = datetime.today()
-    # current_date_format = datetime.strptime(current_date, '%Y-%m:%d')
-    # csv_data = yf.download(ticker, '2017-01-01', last_week_date_format)
-    # csv_data.head()
-
     current_date = datetime.date.today()
-    csv_data = yf.download(ticker, '2017-01-01', '2023-01-18')
+    csv_data = yf.download(ticker, '2017-01-01', current_date)
     csv_data.head()
 
     # Create the data
@@ -78,11 +69,10 @@ def predict_model():
     print(Next5DaysPrice)
     print(real_seven_days)
 
-    mse_loss = MeanSquaredError()
+    rmse = np.sqrt(np.mean(((Next5DaysPrice - real_seven_days) ** 2)))
 
     # Making predictions on test data
     Last10DaysPrices=FullData[-15:]
-                    #np.array([1376.2, 1371.75,1387.15,1370.5 ,1344.95, 1312.05, 1316.65, 1339.45, 1339.7 ,1340.85])
     
     # Reshaping the data to (-1,1 )because its a single entry
     Last10DaysPrices=Last10DaysPrices.reshape(-1, 1)
@@ -95,8 +85,6 @@ def predict_model():
     NumberofFeatures=X_test.shape[1]
     # Reshaping the data as 3D input
     X_test=X_test.reshape(NumberofSamples,TimeSteps,NumberofFeatures)
-
-    regressor = keras.models.load_model('/content/drive/MyDrive/bbybjk_training_model.h5')
     
     # Generating the predictions for next 5 days
     Next5DaysPrice = regressor.predict(X_test)
@@ -104,8 +92,20 @@ def predict_model():
     # Generating the prices in original scale
     Next5DaysPrice = DataScaler.inverse_transform(Next5DaysPrice)
 
-    json_str = json.dumps({
-        "prediksi": Next5DaysPrice.tolist()
-    })
+    list_actual = list(real_seven_days.flat)
+    list_predict = list(Next5DaysPrice.flat)
 
-    return json_str
+    list_actual = [float(i) for i in list_actual]
+    list_predict = [float(i) for i in list_predict]
+
+    # json_str = json.dumps({
+    #     "prediksi": list_predict,
+    #     "rmse": rmse
+    # })
+
+    #return json.loads(json_str)
+
+    return {
+        "prediksi": list_predict,
+        "rmse": rmse
+    }

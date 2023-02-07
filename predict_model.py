@@ -68,6 +68,7 @@ def predict_model():
 
     print(Next5DaysPrice)
     print(real_seven_days)
+    print("A")
 
     rmse = np.sqrt(np.mean(((Next5DaysPrice - real_seven_days) ** 2)))
 

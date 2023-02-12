@@ -55,7 +55,9 @@ def predict_model(stock_code, algorithm):
     # Reshaping the data as 3D input
     X_test=X_test.reshape(NumberofSamples,TimeSteps,NumberofFeatures)
 
-    regressor = keras.models.load_model('./bbybjk_training_' + algorithm + '_model_' + current_date + '.h5')
+    #regressor = keras.models.load_model('./bbybjk_training_' + algorithm + '_model_' + current_date + '.h5')
+
+    regressor = keras.models.load_model('./bbybjk_training_model.h5')
     
     # Generating the predictions for next 5 days
     Next5DaysPrice = regressor.predict(X_test)

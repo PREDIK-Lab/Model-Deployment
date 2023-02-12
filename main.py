@@ -53,7 +53,7 @@ async def give_lstm_prediction_result(stock_code):
 
     return result
 
-async def give_gru_prediction_result():
+async def give_gru_prediction_result(stock_code):
     result = predict_model(stock_code, 'gru')
 
     await asyncio.sleep(1)

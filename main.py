@@ -1,4 +1,5 @@
 from predict_model import *
+from get_graph import *
 from flask import Flask, jsonify, request
 import os
 import asyncio
@@ -13,17 +14,25 @@ def index():
 # def help():
 #     return "eid"
 
+@app.route("/grafik", methods = ['GET'])
+def get_graph_info():
+    stock_code = 'BBYB.JK'
+
+    return get_graph(stock_code)
+
 @app.route("/prediksi", methods = ['GET'])
 def predict():
+    stock_code = 'BBYB.JK'
+
     asyncio.set_event_loop(asyncio.new_event_loop())
     loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(predict_concurrently())
+    result = loop.run_until_complete(predict_concurrently(stock_code))
 
     return result
 
-async def predict_concurrently():
-    lstm_prediction = asyncio.create_task(give_lstm_prediction_result())
-    gru_prediction = asyncio.create_task(give_gru_prediction_result())
+async def predict_concurrently(stock_code):
+    lstm_prediction = asyncio.create_task(give_lstm_prediction_result(stock_code))
+    gru_prediction = asyncio.create_task(give_gru_prediction_result(stock_code))
 
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction
@@ -37,15 +46,15 @@ async def predict_concurrently():
   
         return jsonify(data)
 
-async def give_lstm_prediction_result():
-    result = predict_model()
+async def give_lstm_prediction_result(stock_code):
+    result = predict_model(stock_code, 'lstm')
 
     await asyncio.sleep(1)
 
     return result
 
 async def give_gru_prediction_result():
-    result = predict_model()
+    result = predict_model(stock_code, 'gru')
 
     await asyncio.sleep(1)
 

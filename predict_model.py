@@ -16,9 +16,9 @@ import math
 import datetime
 import json
 
-def predict_model():
+def predict_model(stock_code, algorithm):
     # Fetch the data
-    ticker = 'BBYB.JK'
+    ticker = stock_code
 
     current_date = datetime.date.today()
     csv_data = yf.download(ticker, '2017-01-01', current_date)
@@ -32,9 +32,6 @@ def predict_model():
 
     FullData=csv_data[['Close']].values
     # print(FullData[-15:])
-    
-    # Feature Scaling for fast training of neural networks
-    from sklearn.preprocessing import StandardScaler, MinMaxScaler
     
     # Choosing between Standardization or normalization
     sc=MinMaxScaler()
@@ -58,7 +55,7 @@ def predict_model():
     # Reshaping the data as 3D input
     X_test=X_test.reshape(NumberofSamples,TimeSteps,NumberofFeatures)
 
-    regressor = keras.models.load_model('./bbybjk_training_model.h5')
+    regressor = keras.models.load_model('./bbybjk_training_' + algorithm + '_model_' + current_date + '.h5')
     
     # Generating the predictions for next 5 days
     Next5DaysPrice = regressor.predict(X_test)
@@ -68,8 +65,7 @@ def predict_model():
 
     print(Next5DaysPrice)
     print(real_seven_days)
-    print("A")
-
+    
     rmse = np.sqrt(np.mean(((Next5DaysPrice - real_seven_days) ** 2)))
 
     # Making predictions on test data

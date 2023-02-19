@@ -25,4 +25,4 @@ tensorflow==2.11.0
 tensorflow-estimator==2.11.0
 Werkzeug==1.0.1
 yahoo-earnings-calendar==0.6.0
-yfinance==0.2.4
+yfinance==0.2.11

@@ -1,8 +1,11 @@
 from predict_model import *
 from get_graph import *
 from flask import Flask, jsonify, request
+import yfinance as yf
+from yahoo_earnings_calendar import YahooEarningsCalendar
 import os
 import asyncio
+import datetime
 
 app = Flask(__name__)
 
@@ -13,6 +16,16 @@ def index():
 # @app.route("/bantu")
 # def help():
 #     return "eid"
+
+@app.route("/info", methods = ['GET'])
+def get_info():
+    stock_code = 'BBYB.JK'
+
+    info = yf.Ticker(stock_code).info
+
+    return {
+        "hasil": info['longBusinessSummary']
+    }
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():
@@ -40,8 +53,8 @@ async def predict_concurrently(stock_code):
     if(request.method == 'GET'):
         data = {
             "success" : True,
-            "lstm_result" : lstm_prediction,
-            "gru_result" : gru_prediction,
+            "hasil_lstm" : lstm_prediction,
+            "hasil_gru" : gru_prediction,
         }
   
         return jsonify(data)

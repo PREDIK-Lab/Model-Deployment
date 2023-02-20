@@ -50,8 +50,6 @@ async def predict_concurrently(stock_code):
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction
 
-    print("a")
-
     if(request.method == 'GET'):
         data = {
             "success" : True,

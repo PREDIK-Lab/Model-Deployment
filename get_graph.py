@@ -9,8 +9,8 @@ import math
 import datetime
 import json
 
-def get_graph(stock_code):
-    ticker = yf.Ticker(stock_code)
+def get_graph(kode_saham):
+    ticker = yf.Ticker(kode_saham)
 
     csv_data = ticker.history(period="max")
     csv_data.head()

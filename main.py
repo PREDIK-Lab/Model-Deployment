@@ -13,15 +13,12 @@ app = Flask(__name__)
 def index():
     return "<h1 style='color:green'>Hello World!</h1>"
 
-# @app.route("/bantu")
-# def help():
-#     return "eid"
-
 @app.route("/info", methods = ['GET'])
 def get_info():
-    stock_code = 'BBYB.JK'
+    args = request.args
+    kode_saham = args.get("kode_saham") #'BBYB.JK'
 
-    info = yf.Ticker(stock_code).info
+    info = yf.Ticker(kode_saham).info
 
     return {
         "hasil": info['longBusinessSummary']
@@ -29,23 +26,25 @@ def get_info():
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():
-    stock_code = 'BBYB.JK'
+    args = request.args
+    kode_saham = args.get("kode_saham", type=str) #'BBYB.JK'
 
-    return get_graph(stock_code)
+    return get_graph(kode_saham)
 
 @app.route("/prediksi", methods = ['GET'])
 def predict():
-    stock_code = 'BBYB.JK'
+    args = request.args
+    kode_saham = args.get("kode_saham") #'BBYB.JK'
 
     asyncio.set_event_loop(asyncio.new_event_loop())
     loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(predict_concurrently(stock_code))
+    result = loop.run_until_complete(predict_concurrently(kode_saham))
 
     return result
 
-async def predict_concurrently(stock_code):
-    lstm_prediction = asyncio.create_task(give_lstm_prediction_result(stock_code))
-    gru_prediction = asyncio.create_task(give_gru_prediction_result(stock_code))
+async def predict_concurrently(kode_saham):
+    lstm_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
+    gru_prediction = asyncio.create_task(give_gru_prediction_result(kode_saham))
 
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction
@@ -61,15 +60,15 @@ async def predict_concurrently(stock_code):
   
         return jsonify(data)
 
-async def give_lstm_prediction_result(stock_code):
-    result = predict_model(stock_code, 'lstm')
+async def give_lstm_prediction_result(kode_saham):
+    result = predict_model(kode_saham, 'lstm')
 
     await asyncio.sleep(1)
 
     return result
 
-async def give_gru_prediction_result(stock_code):
-    result = predict_model(stock_code, 'gru')
+async def give_gru_prediction_result(kode_saham):
+    result = predict_model(kode_saham, 'gru')
 
     await asyncio.sleep(1)
 

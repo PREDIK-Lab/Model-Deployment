@@ -30,47 +30,47 @@ def build_lstm_model():
     # Plot the stock prices
     csv_data.plot(x = 'TradeDate', y = 'Close', kind = 'line', figsize = (20,6), rot = 20)
 
-    FullData=csv_data[['Close']].values
-    print(FullData[0:5])
+    full_data=csv_data[['Close']].values
+    print(full_data[0:5])
         
     # Choosing between Standardization or normalization
     sc = MinMaxScaler()
     
-    DataScaler = sc.fit(FullData)
-    X = DataScaler.transform(FullData)
+    data_scaler = sc.fit(full_data)
+    x = data_scaler.transform(full_data)
     
     print('### After Normalization ###')
-    X[0:5]
+    x[0:5]
 
     # Printing last 10 values of the scaled data which we have created above for the last model
     # Here I am changing the shape of the data to one dimensional array because
-    # for Multi step data preparation we need to X input in this fashion
-    X = X.reshape(X.shape[0],)
+    # for Multi step data preparation we need to x input in this fashion
+    x = x.reshape(x.shape[0],)
     print('Scaled Prices')
-    print(X[-10:])
+    print(x[-10:])
 
     # Split into samples
-    X_samples = list()
+    x_samples = list()
     y_samples = list()
 
-    NumerOfRows = len(X)
-    TimeSteps = 15  # next few day's Price Prediction is based on last how many past day's prices
-    FutureTimeSteps = 7 # How many days in future you want to predict the prices
+    n_row = len(x)
+    last_time_step = 15  # next few day's Price Prediction is based on last how many past day's prices
+    future_time_step = 7 # How many days in future you want to predict the prices
     
     # Iterate thru the values to create combinations
-    for i in range(TimeSteps , NumerOfRows - FutureTimeSteps , 1):
-        x_sample = X[i-TimeSteps:i]
-        y_sample = X[i:i+FutureTimeSteps]
-        X_samples.append(x_sample)
+    for i in range(last_time_step , n_row - future_time_step , 1):
+        x_sample = x[i-last_time_step:i]
+        y_sample = x[i:i+future_time_step]
+        x_samples.append(x_sample)
         y_samples.append(y_sample)
     
     ################################################
     
     # Reshape the Input as a 3D (samples, Time Steps, Features)
-    X_data = np.array(X_samples)
-    X_data = X_data.reshape(X_data.shape[0], X_data.shape[1], 1)
+    x_data = np.array(x_samples)
+    x_data = x_data.reshape(x_data.shape[0], x_data.shape[1], 1)
     print('### Input Data Shape ###') 
-    print(X_data.shape)
+    print(x_data.shape)
     
     # We do not reshape y as a 3D data  as it is supposed to be a single column only
     y_data = np.array(y_samples)
@@ -78,56 +78,56 @@ def build_lstm_model():
     print(y_data.shape)
 
     # Choose the number of testing data records
-    TestingRecords = int(len(csv_data) - (len(csv_data) * 80 / 100))
+    test_record = int(len(csv_data) - (len(csv_data) * 80 / 100))
 
     # Split the data into train and test
-    X_train = X_data[:-TestingRecords]
-    X_test = X_data[-TestingRecords:]
-    y_train = y_data[:-TestingRecords]
-    y_test = y_data[-TestingRecords:]
+    x_train = x_data[:-test_record]
+    x_test = x_data[-test_record:]
+    y_train = y_data[:-test_record]
+    y_test = y_data[-test_record:]
 
     ############################################
 
     # Print the shape of training and testing
     print('\n#### Training Data shape ####')
-    print(X_train.shape)
+    print(x_train.shape)
     print(y_train.shape)
     print('\n#### Testing Data shape ####')
-    print(X_test.shape)
+    print(x_test.shape)
     print(y_test.shape)
 
     # # Visualizing the input and output being sent to the LSTM model
-    # for inp, out in zip(X_train[0:2], y_train[0:2]):
+    # for inp, out in zip(x_train[0:2], y_train[0:2]):
     #     print(inp,'--', out)
 
     # Based on last 10 days prices we are learning the next 5 days of prices
-    for inp, out in zip(X_train[0:2], y_train[0:2]):
+    for inp, out in zip(x_train[0:2], y_train[0:2]):
         print(inp)
         print('====>')
         print(out)
         print('#'*20)
 
     # Defining Input shapes for LSTM
-    TimeSteps = X_train.shape[1]
-    TotalFeatures = X_train.shape[2]
-    print("Number of TimeSteps:", TimeSteps)
-    print("Number of Features:", TotalFeatures)
+    last_time_step = x_train.shape[1]
+    n_feature = x_train.shape[2]
+    print("Number of last_time_step:", last_time_step)
+    print("Number of Features:", n_feature)
 
     # Initialising the RNN
     regressor = Sequential()
 
     # Adding the First input hidden layer and the LSTM layer
     # return_sequences = True, means the output of every time step to be shared with hidden next layer
-    regressor.add(LSTM(units = 10, activation = 'relu', input_shape = (TimeSteps, TotalFeatures), return_sequences = True))
+    regressor.add(LSTM(units = 10, activation = 'relu', input_shape = (last_time_step, n_feature), return_sequences = True))
 
     # Adding the Second Second hidden layer and the LSTM layer
-    regressor.add(LSTM(units = 10, activation = 'relu', input_shape = (TimeSteps, TotalFeatures), return_sequences = True))
+    regressor.add(LSTM(units = 10, activation = 'relu', input_shape = (last_time_step, n_feature), return_sequences = True))
 
     # Adding the Second Third hidden layer and the LSTM layer
     regressor.add(LSTM(units = 15, activation = 'relu', return_sequences = False ))
 
     # Adding the output layer
-    regressor.add(Dense(units = FutureTimeSteps))
+    regressor.add(Dense(units = future_time_step))
 
     # Compiling the RNN
     regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
@@ -135,26 +135,26 @@ def build_lstm_model():
     ##################################################
 
     # Measuring the time taken by the model to train
-    StartTime = time.time()
+    start_time = time.time()
 
     # Fitting the RNN to the Training set
-    result = regressor.fit(X_train, y_train, batch_size = 10, epochs = 10, validation_data = [X_test, y_test])
+    result = regressor.fit(x_train, y_train, batch_size = 10, epochs = 10, validation_data = [x_test, y_test])
 
-    EndTime = time.time()
-    print("## Total Time Taken: ", round((EndTime-StartTime)/60), 'Minutes ##')
+    end_time = time.time()
+    print("## Total Time Taken: ", round((end_time - start_time)/60), 'Minutes ##')
 
     # Making predictions on test data
-    predicted_Price = regressor.predict(X_test)
-    predicted_Price = DataScaler.inverse_transform(predicted_Price)
-    print(predicted_Price)
+    predicted_price = regressor.predict(x_test)
+    predicted_price = data_scaler.inverse_transform(predicted_price)
+    print(predicted_price)
 
-    # Getting the original price values for testing data
-    orig=y_test
-    orig=DataScaler.inverse_transform(y_test)
-    print(orig)
+    # Getting the actual price values for testing data
+    actual_value = y_test
+    actual_value = data_scaler.inverse_transform(y_test)
+    print(actual_value)
 
     # Accuracy of the predictions
-    # print('Accuracy:', 100 - (100*(abs(orig-predicted_Price)/orig)).mean())
+    # print('Accuracy:', 100 - (100*(abs(actual_value-predicted_price)/actual_value)).mean())
 
     regressor.save('/content/drive/MyDrive/bbybjk_training_lstm_model_' + last_date + '.h5')
     
@@ -176,47 +176,47 @@ def build_gru_model():
     # Plot the stock prices
     csv_data.plot(x = 'TradeDate', y = 'Close', kind = 'line', figsize = (20,6), rot = 20)
 
-    FullData=csv_data[['Close']].values
-    print(FullData[0:5])
+    full_data=csv_data[['Close']].values
+    print(full_data[0:5])
         
     # Choosing between Standardization or normalization
     sc = MinMaxScaler()
     
-    DataScaler = sc.fit(FullData)
-    X = DataScaler.transform(FullData)
+    data_scaler = sc.fit(full_data)
+    x = data_scaler.transform(full_data)
     
     print('### After Normalization ###')
-    X[0:5]
+    x[0:5]
 
     # Printing last 10 values of the scaled data which we have created above for the last model
     # Here I am changing the shape of the data to one dimensional array because
-    # for Multi step data preparation we need to X input in this fashion
-    X = X.reshape(X.shape[0],)
+    # for Multi step data preparation we need to x input in this fashion
+    x = x.reshape(x.shape[0],)
     print('Scaled Prices')
-    print(X[-10:])
+    print(x[-10:])
 
     # Split into samples
-    X_samples = list()
+    x_samples = list()
     y_samples = list()
 
-    NumerOfRows = len(X)
-    TimeSteps = 15  # next few day's Price Prediction is based on last how many past day's prices
-    FutureTimeSteps = 7 # How many days in future you want to predict the prices
+    n_row = len(x)
+    last_time_step = 15  # next few day's Price Prediction is based on last how many past day's prices
+    future_time_step = 7 # How many days in future you want to predict the prices
     
     # Iterate thru the values to create combinations
-    for i in range(TimeSteps , NumerOfRows - FutureTimeSteps , 1):
-        x_sample = X[i-TimeSteps:i]
-        y_sample = X[i:i+FutureTimeSteps]
-        X_samples.append(x_sample)
+    for i in range(last_time_step , n_row - future_time_step , 1):
+        x_sample = x[i-last_time_step:i]
+        y_sample = x[i:i+future_time_step]
+        x_samples.append(x_sample)
         y_samples.append(y_sample)
     
     ################################################
     
     # Reshape the Input as a 3D (samples, Time Steps, Features)
-    X_data = np.array(X_samples)
-    X_data = X_data.reshape(X_data.shape[0], X_data.shape[1], 1)
+    x_data = np.array(x_samples)
+    x_data = x_data.reshape(x_data.shape[0], x_data.shape[1], 1)
     print('### Input Data Shape ###') 
-    print(X_data.shape)
+    print(x_data.shape)
     
     # We do not reshape y as a 3D data  as it is supposed to be a single column only
     y_data = np.array(y_samples)
@@ -224,56 +224,56 @@ def build_gru_model():
     print(y_data.shape)
 
     # Choose the number of testing data records
-    TestingRecords = int(len(csv_data) - (len(csv_data) * 80 / 100))
+    test_record = int(len(csv_data) - (len(csv_data) * 80 / 100))
 
     # Split the data into train and test
-    X_train = X_data[:-TestingRecords]
-    X_test = X_data[-TestingRecords:]
-    y_train = y_data[:-TestingRecords]
-    y_test = y_data[-TestingRecords:]
+    x_train = x_data[:-test_record]
+    x_test = x_data[-test_record:]
+    y_train = y_data[:-test_record]
+    y_test = y_data[-test_record:]
 
     ############################################
 
     # Print the shape of training and testing
     print('\n#### Training Data shape ####')
-    print(X_train.shape)
+    print(x_train.shape)
     print(y_train.shape)
     print('\n#### Testing Data shape ####')
-    print(X_test.shape)
+    print(x_test.shape)
     print(y_test.shape)
 
     # # Visualizing the input and output being sent to the GRU model
-    # for inp, out in zip(X_train[0:2], y_train[0:2]):
+    # for inp, out in zip(x_train[0:2], y_train[0:2]):
     #     print(inp,'--', out)
 
     # Based on last 10 days prices we are learning the next 5 days of prices
-    for inp, out in zip(X_train[0:2], y_train[0:2]):
+    for inp, out in zip(x_train[0:2], y_train[0:2]):
         print(inp)
         print('====>')
         print(out)
         print('#'*20)
 
     # Defining Input shapes for GRU
-    TimeSteps = X_train.shape[1]
-    TotalFeatures = X_train.shape[2]
-    print("Number of TimeSteps:", TimeSteps)
-    print("Number of Features:", TotalFeatures)
+    last_time_step = x_train.shape[1]
+    n_feature = x_train.shape[2]
+    print("Number of last_time_step:", last_time_step)
+    print("Number of Features:", n_feature)
 
     # Initialising the RNN
     regressor = Sequential()
 
     # Adding the First input hidden layer and the LSTM layer
     # return_sequences = True, means the output of every time step to be shared with hidden next layer
-    regressor.add(GRU(units = 10, activation = 'relu', input_shape = (TimeSteps, TotalFeatures), return_sequences = True))
+    regressor.add(GRU(units = 10, activation = 'relu', input_shape = (last_time_step, n_feature), return_sequences = True))
 
     # Adding the Second Second hidden layer and the GRU layer
-    regressor.add(GRU(units = 5, activation = 'relu', input_shape = (TimeSteps, TotalFeatures), return_sequences = True))
+    regressor.add(GRU(units = 5, activation = 'relu', input_shape = (last_time_step, n_feature), return_sequences = True))
 
     # Adding the Second Third hidden layer and the GRU layer
     regressor.add(GRU(units = 5, activation = 'relu', return_sequences = False))
 
     # Adding the output layer
-    regressor.add(Dense(units = FutureTimeSteps))
+    regressor.add(Dense(units = future_time_step))
 
     # Compiling the RNN
     regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
@@ -281,26 +281,26 @@ def build_gru_model():
     ##################################################
 
     # Measuring the time taken by the model to train
-    StartTime = time.time()
+    start_time = time.time()
 
     # Fitting the RNN to the Training set
-    result = regressor.fit(X_train, y_train, batch_size = 10, epochs = 10, validation_data = [X_test, y_test])
+    result = regressor.fit(x_train, y_train, batch_size = 10, epochs = 10, validation_data = [x_test, y_test])
 
-    EndTime = time.time()
-    print("## Total Time Taken: ", round((EndTime-StartTime)/60), 'Minutes ##')
+    end_time = time.time()
+    print("## Total Time Taken: ", round((end_time-start_time)/60), 'Minutes ##')
 
     # Making predictions on test data
-    predicted_Price = regressor.predict(X_test)
-    predicted_Price = DataScaler.inverse_transform(predicted_Price)
-    print(predicted_Price)
+    predicted_price = regressor.predict(x_test)
+    predicted_price = data_scaler.inverse_transform(predicted_price)
+    print(predicted_price)
 
-    # Getting the original price values for testing data
-    orig=y_test
-    orig=DataScaler.inverse_transform(y_test)
-    print(orig)
+    # Getting the actual_valueinal price values for testing data
+    actual_value=y_test
+    actual_value=data_scaler.inverse_transform(y_test)
+    print(actual_value)
 
     # Accuracy of the predictions
-    # print('Accuracy:', 100 - (100*(abs(orig-predicted_Price)/orig)).mean())
+    # print('Accuracy:', 100 - (100*(abs(actual_value-predicted_price)/actual_value)).mean())
 
     regressor.save('/content/drive/MyDrive/bbybjk_training_gru_model_' + last_date + '.h5')
     

@@ -3,10 +3,11 @@ from get_graph import *
 from flask import Flask, jsonify, request
 import yfinance as yf
 from yahoo_earnings_calendar import YahooEarningsCalendar
+from yahooquery import Ticker
+
 import os
 import asyncio
 import datetime
-# from yahooquery import Ticker
 
 app = Flask(__name__)
 
@@ -17,16 +18,20 @@ def index():
 @app.route("/info", methods = ['GET'])
 def get_info():
     args = request.args
-    kode_saham = args.get("kode_saham")
-    #kode_saham = 'BBYB.JK'
+    #kode_saham = args.get("kode_saham")
+    kode_saham = 'ARTO.JK'
 
     info = Ticker(kode_saham)
 
-    return info.summary_detail
+    return info.summary_detail[kode_saham]['previousClose']
 
     # return {
     #     "hasil": {
     #         "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
+    #         "sektor": info.summary_profile[kode_saham]['sector'],
+    #         "negara": info.summary_profile[kode_saham]['country'],
+    #         "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'],
+    #         ""   
     #     }
     # }
 

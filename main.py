@@ -6,7 +6,7 @@ from yahoo_earnings_calendar import YahooEarningsCalendar
 import os
 import asyncio
 import datetime
-from yahooquery import Ticker
+# from yahooquery import Ticker
 
 app = Flask(__name__)
 
@@ -17,24 +17,24 @@ def index():
 @app.route("/info", methods = ['GET'])
 def get_info():
     args = request.args
-    #kode_saham = args.get("kode_saham")
-    kode_saham = 'BBYB.JK'
+    kode_saham = args.get("kode_saham")
+    #kode_saham = 'BBYB.JK'
 
     info = Ticker(kode_saham)
 
-    print(info)
-
-    return info.summary_profile
+    return info.summary_detail
 
     # return {
-    #     "hasil": info['longBusinessSummary']
+    #     "hasil": {
+    #         "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
+    #     }
     # }
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():
     args = request.args
-    kode_saham = args.get("kode_saham", type=str)
-    #kode_saham = 'BBYB.JK'
+    #kode_saham = args.get("kode_saham", type=str)
+    kode_saham = 'BBYB.JK'
 
     return get_graph(kode_saham)
 

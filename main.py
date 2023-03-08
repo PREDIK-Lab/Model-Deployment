@@ -18,8 +18,8 @@ def index():
 @app.route("/info", methods = ['GET'])
 def get_info():
     args = request.args
-    #kode_saham = args.get("kode_saham")
-    kode_saham = 'ARTO.JK'
+    kode_saham = args.get("kode_saham")
+    #kode_saham = 'ARTO.JK'
 
     info = Ticker(kode_saham)
 
@@ -38,8 +38,8 @@ def get_info():
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():
     args = request.args
-    #kode_saham = args.get("kode_saham", type=str)
-    kode_saham = 'BBYB.JK'
+    kode_saham = args.get("kode_saham", type=str)
+    #kode_saham = 'BBYB.JK'
 
     return get_graph(kode_saham)
 

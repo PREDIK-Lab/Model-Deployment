@@ -65,6 +65,7 @@ def predict_model(kode_saham, algoritma):
     # Generating the prices in original scale
     predicted_seven = data_scaler.inverse_transform(predicted_seven)
 
+    print("kk")
     print(predicted_seven)
     print(actual_seven)
     
@@ -79,11 +80,11 @@ def predict_model(kode_saham, algoritma):
     # Scaling the data on the same level on which model was trained
     x_test = data_scaler.transform(actual_fifteen)
     
-    # n_sample = 1
-    # time_step = x_test.shape[0]
-    # n_feature = x_test.shape[1]
-    # # Reshaping the data as 3D input
-    # x_test = x_test.reshape(n_sample, time_step, n_feature)
+    n_sample = 1
+    time_step = x_test.shape[0]
+    n_feature = x_test.shape[1]
+    # Reshaping the data as 3D input
+    x_test = x_test.reshape(n_sample, time_step, n_feature)
     
     # Generating the predictions for next 7 days
     predicted_seven = regressor.predict(x_test)

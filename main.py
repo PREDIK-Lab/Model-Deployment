@@ -46,7 +46,8 @@ def get_graph_info():
 @app.route("/prediksi", methods = ['GET'])
 def predict():
     args = request.args
-    kode_saham = args.get("kode_saham", type=str) #'BBYB.JK'
+    #kode_saham = args.get("kode_saham", type=str) #'BBYB.JK'
+    kode_saham = 'BBYB.JK'
 
     asyncio.set_event_loop(asyncio.new_event_loop())
     loop = asyncio.get_event_loop()
@@ -56,7 +57,7 @@ def predict():
 
 async def predict_concurrently(kode_saham):
     lstm_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
-    gru_prediction = asyncio.create_task(give_gru_prediction_result(kode_saham))
+    gru_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
 
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction

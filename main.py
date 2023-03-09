@@ -46,7 +46,7 @@ def get_graph_info():
 @app.route("/prediksi", methods = ['GET'])
 def predict():
     args = request.args
-    kode_saham = args.get("kode_saham") #'BBYB.JK'
+    kode_saham = args.get("kode_saham", type=str) #'BBYB.JK'
 
     asyncio.set_event_loop(asyncio.new_event_loop())
     loop = asyncio.get_event_loop()

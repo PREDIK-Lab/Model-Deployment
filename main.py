@@ -23,17 +23,19 @@ def get_info():
 
     info = Ticker(kode_saham)
 
-    return info.summary_detail[kode_saham]['previousClose']
+    #return info.summary_detail[kode_saham]#['previousClose']
 
-    # return {
-    #     "hasil": {
-    #         "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
-    #         "sektor": info.summary_profile[kode_saham]['sector'],
-    #         "negara": info.summary_profile[kode_saham]['country'],
-    #         "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'],
-    #         ""   
-    #     }
-    # }
+    return {
+        "hasil": {
+            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
+            "sektor": info.summary_profile[kode_saham]['sector'],
+            "industri": info.summary_profile[kode_saham]['industry'],
+            "negara": info.summary_profile[kode_saham]['country'],
+            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
+            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+            "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'],
+        }
+    }
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():
@@ -62,7 +64,7 @@ async def predict_concurrently(kode_saham):
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction
 
-    print("")
+    print("-")
 
     if(request.method == 'GET'):
         data = {

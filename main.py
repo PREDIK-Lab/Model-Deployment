@@ -25,17 +25,18 @@ def get_info():
 
     #return info.summary_detail[kode_saham]#['previousClose']
 
-    return {
-        "hasil": {
-            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
-            "sektor": info.summary_profile[kode_saham]['sector'],
-            "industri": info.summary_profile[kode_saham]['industry'],
-            "negara": info.summary_profile[kode_saham]['country'],
-            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'],
-        }
+    data = {
+        "success" : True,
+        "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
+        "sektor": info.summary_profile[kode_saham]['sector'],
+        "industri": info.summary_profile[kode_saham]['industry'],
+        "negara": info.summary_profile[kode_saham]['country'],
+        "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
+        "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+        "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'],
     }
+    
+    return jsonify(data)
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():

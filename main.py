@@ -23,7 +23,7 @@ def get_info():
 
     info = Ticker(kode_saham)
 
-    #return info.summary_detail[kode_saham]#['previousClose']
+    #return info.summary_profile[kode_saham]#['previousClose']
 
     data = {
         "success" : True,

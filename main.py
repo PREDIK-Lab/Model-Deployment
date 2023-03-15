@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    t = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
+    return "Hi"
 
 @app.route("/info", methods = ['GET'])
 def get_info():

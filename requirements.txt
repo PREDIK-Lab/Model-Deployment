@@ -27,3 +27,4 @@ Werkzeug==1.0.1
 yahooquery==2.3.0
 yahoo-earnings-calendar==0.6.0
 yfinance==0.2.11
+zcache==0.2

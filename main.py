@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 import yfinance as yf
 from yahoo_earnings_calendar import YahooEarningsCalendar
 from yahooquery import Ticker
+from pytanggalmerah import TanggalMerah
 
 import os
 import asyncio
@@ -13,7 +14,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "<h1 style='color:green'>Hello World!</h1>"
+    t = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
 @app.route("/info", methods = ['GET'])
 def get_info():

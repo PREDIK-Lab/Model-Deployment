@@ -10,6 +10,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.losses import MeanSquaredError
 from sklearn.metrics import mean_squared_error
+from pytanggalmerah import TanggalMerah
 import pandas as pd
 import numpy as np
 import math
@@ -18,10 +19,29 @@ import json
 
 def predict_model(kode_saham, algoritma):
     # Fetch the data
-    ticker = kode_saham
+    ticker = yf.Ticker(kode_saham)
 
-    current_date = datetime.date.today()
-    csv_data = yf.download(ticker, '2017-01-01', current_date)
+    csv_data = ticker.history(period="3")
+    csv_data.head()
+    csv_data['Date'] = csv_data.index
+
+    graph_date = list(csv_data['Date'].values.flat)
+
+    last_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
+    last_date = (pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1)) if last_date == datetime.date.today() else last_date
+    
+    start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
+    start_date = start_date if start_date == datetime.date.today() else (pd.to_datetime(str(start_date)) - datetime.timedelta(days = 1))
+    
+    current_date = last_date.strftime("%Y-%m-%d") #datetime.date.today()
+    current_year = last_date.strftime("%Y")
+    current_month = last_date.strftime("%m")
+    current_day_date = last_date.strftime("%d")
+
+    #return current_year #current_date + datetime.timedelta(days=1)
+
+    ticker = kode_saham
+    csv_data = yf.download(ticker, '2017-01-01', last_date)
     csv_data.head()
 
     # Create the data
@@ -65,9 +85,8 @@ def predict_model(kode_saham, algoritma):
     # Generating the prices in original scale
     predicted_seven = data_scaler.inverse_transform(predicted_seven)
 
-    print("kk")
-    print(predicted_seven)
-    print(actual_seven)
+    # print(predicted_seven)
+    # print(actual_seven)
     
     rmse = np.sqrt(np.mean(((predicted_seven - actual_seven) ** 2)))
 
@@ -96,7 +115,43 @@ def predict_model(kode_saham, algoritma):
     list_predict = list(predicted_seven.flat)
 
     list_actual = [float(i) for i in list_actual]
-    list_predict = [float(i) for i in list_predict]
+    #list_predict = [float(i) for i in list_predict]
+
+    list_date = []
+    list_predict_date = []
+
+    i = 0
+    tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
+
+    while i < 7:
+        start_date = (pd.to_datetime(str(start_date)) + datetime.timedelta(days = 1))
+        current_year = start_date.strftime("%Y")
+        current_month = start_date.strftime("%m")
+        current_day_date = start_date.strftime("%d")
+        current_day = start_date.strftime("%A")
+        
+        tanggal_merah.set_date(current_year, current_month, current_day_date)
+        
+        if(tanggal_merah.check() or tanggal_merah.is_holiday() or tanggal_merah.is_sunday() or current_day == "Saturday"):
+            i += 0
+        else:
+            list_date.append(start_date.strftime("%Y-%m-%d"))
+
+            i += 1
+
+    # for i in list_predict:
+    #     list_predict.append({
+    #         "tanggal": "1",
+    #         "prediksi_harga_penutupan": float(i)
+    #     })    
+
+    for i, j in enumerate(list_predict):
+        list_predict_date.append({
+            "tanggal": list_date[i],
+            "prediksi_harga_penutupan": json.dumps(float(j))
+        })    
+
+    datetime.date.today().strftime("%Y-%m-%d")
 
     # json_str = json.dumps({
     #     "prediksi": list_predict,
@@ -106,6 +161,7 @@ def predict_model(kode_saham, algoritma):
     #return json.loads(json_str)
 
     return {
-        "prediksi": list_predict,
+        "harga_penutupan_saat_ini": json.dumps(float(full_data[-1])),
+        "prediksi": list_predict_date,
         "rmse": rmse
     }

@@ -18,6 +18,8 @@ import datetime
 import json
 
 def predict_model(kode_saham, algoritma):
+    tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
+
     # Fetch the data
     ticker = yf.Ticker(kode_saham)
 
@@ -26,13 +28,22 @@ def predict_model(kode_saham, algoritma):
     csv_data['Date'] = csv_data.index
 
     graph_date = list(csv_data['Date'].values.flat)
+    tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
     last_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
     last_date = (pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1)) if last_date == datetime.date.today() else last_date
     
     start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
-    start_date = start_date if start_date == datetime.date.today() else (pd.to_datetime(str(start_date)) - datetime.timedelta(days = 1))
+    current_year = datetime.date.today().strftime("%Y")
+    current_month = datetime.date.today().strftime("%m")
+    current_day_date = datetime.date.today().strftime("%d")
+    current_day = datetime.date.today().strftime("%A")
     
+    tanggal_merah.set_date(current_year, current_month, current_day_date)
+
+    start_date = start_date if (start_date == datetime.date.today()) else (pd.to_datetime(str(start_date)) - datetime.timedelta(days = 1))
+    start_date = datetime.date.today() if(tanggal_merah.check() or tanggal_merah.is_holiday() or tanggal_merah.is_sunday() or current_day == "Saturday") else start_date
+
     current_date = last_date.strftime("%Y-%m-%d") #datetime.date.today()
     current_year = last_date.strftime("%Y")
     current_month = last_date.strftime("%m")
@@ -75,8 +86,7 @@ def predict_model(kode_saham, algoritma):
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    #regressor = keras.models.load_model('./bbybjk_training_' + algoritma + '_model_' + current_date + '.h5')
-
+    #regressor = keras.models.load_model('./' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + current_date + '.h5')
     regressor = keras.models.load_model('./bbybjk_training_model.h5')
     
     # Generating the predictions for next 7 days
@@ -121,7 +131,6 @@ def predict_model(kode_saham, algoritma):
     list_predict_date = []
 
     i = 0
-    tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
     while i < 7:
         start_date = (pd.to_datetime(str(start_date)) + datetime.timedelta(days = 1))

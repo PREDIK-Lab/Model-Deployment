@@ -61,7 +61,7 @@ def predict():
 
 async def predict_concurrently(kode_saham):
     lstm_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
-    gru_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
+    gru_prediction = asyncio.create_task(give_gru_prediction_result(kode_saham))
 
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction

@@ -44,7 +44,7 @@ def predict_model(kode_saham, algoritma):
     start_date = start_date if (start_date == datetime.date.today()) else (pd.to_datetime(str(start_date)) - datetime.timedelta(days = 1))
     start_date = datetime.date.today() if(tanggal_merah.check() or tanggal_merah.is_holiday() or tanggal_merah.is_sunday() or current_day == "Saturday") else start_date
 
-    current_date = last_date.strftime("%Y-%m-%d") #datetime.date.today()
+    current_date = "2023-03-10" #last_date.strftime("%Y-%m-%d") #datetime.date.today()
     current_year = last_date.strftime("%Y")
     current_month = last_date.strftime("%m")
     current_day_date = last_date.strftime("%d")
@@ -86,8 +86,8 @@ def predict_model(kode_saham, algoritma):
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    #regressor = keras.models.load_model('./' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + current_date + '.h5')
-    regressor = keras.models.load_model('./bbybjk_training_model.h5')
+    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + current_date + '.h5')
+    #regressor = keras.models.load_model('./bbybjk_training_model.h5')
     
     # Generating the predictions for next 7 days
     predicted_seven = regressor.predict(x_test)

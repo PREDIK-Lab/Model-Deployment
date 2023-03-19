@@ -170,6 +170,7 @@ def predict_model(kode_saham, algoritma):
     #return json.loads(json_str)
 
     return {
+        "harga_penutupan_sebelumnya": json.dumps(float(full_data[-2])),
         "harga_penutupan_saat_ini": json.dumps(float(full_data[-1])),
         "prediksi": list_predict_date,
         "rmse": rmse

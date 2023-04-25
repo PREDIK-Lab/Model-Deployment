@@ -36,7 +36,7 @@ def get_info():
         "negara": info.summary_profile[kode_saham]['country'],
         "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
         "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-        "tanggal_dividen_terakhir": tanggal_dividen_terakhir,
+        "tanggal_dividen_terakhir": tanggal_dividen_terakhir, 
     }
     
     return jsonify(data)

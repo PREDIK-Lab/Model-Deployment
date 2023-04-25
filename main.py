@@ -18,28 +18,38 @@ def index():
 
 @app.route("/info", methods = ['GET'])
 def get_info():
-    args = request.args
-    kode_saham = args.get("kode_saham")
-    #kode_saham = 'ARTO.JK'
+    try:
+        args = request.args
+        kode_saham = args.get("kode_saham")
+        #kode_saham = 'ARTO.JK'
 
-    info = Ticker(kode_saham)
+        info = Ticker(kode_saham)
 
-    #return info.summary_profile[kode_saham]#['previousClose']
+        #return info.summary_profile[kode_saham]#['previousClose']
 
-    tanggal_dividen_terakhir = info.summary_detail[kode_saham]['exDividendDate'] if info.summary_detail[kode_saham]['exDividendDate'] != null else "-"
-
-    data = {
-        "success" : True,
-        "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
-        "sektor": info.summary_profile[kode_saham]['sector'],
-        "industri": info.summary_profile[kode_saham]['industry'],
-        "negara": info.summary_profile[kode_saham]['country'],
-        "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-        "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-        "tanggal_dividen_terakhir": tanggal_dividen_terakhir, 
-    }
-    
-    return jsonify(data)
+        data = {
+            "success" : True,
+            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
+            "sektor": info.summary_profile[kode_saham]['sector'],
+            "industri": info.summary_profile[kode_saham]['industry'],
+            "negara": info.summary_profile[kode_saham]['country'],
+            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
+            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+            "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
+        }
+    except:
+        data = {
+            "success" : True,
+            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
+            "sektor": info.summary_profile[kode_saham]['sector'],
+            "industri": info.summary_profile[kode_saham]['industry'],
+            "negara": info.summary_profile[kode_saham]['country'],
+            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
+            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+            "tanggal_dividen_terakhir": "-", 
+        }
+    finally:
+        return jsonify(data)
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():

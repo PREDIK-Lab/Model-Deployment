@@ -26,6 +26,8 @@ def get_info():
 
     #return info.summary_profile[kode_saham]#['previousClose']
 
+    tanggal_dividen_terakhir = info.summary_detail[kode_saham]['exDividendDate'] if info.summary_detail[kode_saham]['exDividendDate'] != null else "-"
+
     data = {
         "success" : True,
         "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
@@ -34,7 +36,7 @@ def get_info():
         "negara": info.summary_profile[kode_saham]['country'],
         "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
         "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-        "tanggal_dividen_terakhir": "-" #info.summary_detail[kode_saham]['exDividendDate'],
+        "tanggal_dividen_terakhir": tanggal_dividen_terakhir,
     }
     
     return jsonify(data)

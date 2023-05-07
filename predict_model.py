@@ -103,7 +103,7 @@ def predict_model(kode_saham, algoritma):
     # Making predictions on test data
     actual_fifteen = full_data[-15:]
     
-    # Reshaping the data to (-1,1 )because its a single entry
+    # Reshaping the data to (-1, 1) because its a single entry
     actual_fifteen = actual_fifteen.reshape(-1, 1)
     
     # Scaling the data on the same level on which model was trained

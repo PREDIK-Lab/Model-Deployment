@@ -44,6 +44,7 @@ def predict_model(kode_saham, algoritma):
     start_date = start_date if (start_date == datetime.date.today()) else (pd.to_datetime(str(start_date)) - datetime.timedelta(days = 1))
     start_date = datetime.date.today() if(tanggal_merah.check() or tanggal_merah.is_holiday() or tanggal_merah.is_sunday() or current_day == "Saturday") else start_date
 
+    initial_date = "2017-01-01"
     current_date = "2023-05-05" #last_date.strftime("%Y-%m-%d") #datetime.date.today()
     current_year = last_date.strftime("%Y")
     current_month = last_date.strftime("%m")
@@ -52,7 +53,7 @@ def predict_model(kode_saham, algoritma):
     #return current_year #current_date + datetime.timedelta(days=1)
 
     ticker = kode_saham
-    csv_data = yf.download(ticker, '2017-01-01', last_date)
+    csv_data = yf.download(ticker, initial_date, last_date)
     csv_data.head()
 
     # Create the data
@@ -86,7 +87,7 @@ def predict_model(kode_saham, algoritma):
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + current_date + '_input15_batch32_epoch100.h5')
+    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '_input15_batch32_epoch100.h5')
     #regressor = keras.models.load_model('./bbybjk_training_model.h5')
     
     # Generating the predictions for next 7 days

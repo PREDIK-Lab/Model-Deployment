@@ -1,3 +1,4 @@
+from build_model import *
 from predict_model import *
 from get_graph import *
 from flask import Flask, jsonify, request
@@ -5,16 +6,34 @@ import yfinance as yf
 from yahoo_earnings_calendar import YahooEarningsCalendar
 from yahooquery import Ticker
 from pytanggalmerah import TanggalMerah
-
+from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
 import os
 import asyncio
 import datetime
 
 app = Flask(__name__)
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=build, trigger="interval", minutes=10)
+scheduler.start()
 
 @app.route('/')
 def index():
-    return "Hi"
+    return "Hai"
+
+def build():
+    result = build_lstm_model("BBYB.JK")
+
+    return result
+
+def build_lstm_prediction(kode_saham):
+    result = build_lstm_model(kode_saham)
+
+    return result
+
+def build_gru_prediction(kode_saham):
+    result = build_gru_model(kode_saham)
+
+    return result
 
 @app.route("/info", methods = ['GET'])
 def get_info():
@@ -104,4 +123,4 @@ async def give_gru_prediction_result(kode_saham):
     return result
 
 if __name__ == '__main__':
-    app.run(debug=True, port=os.getenv("PORT", default=5000), host="0.0.0.0")
+    app.run(debug=False, port=os.getenv("PORT", default=5000), host="0.0.0.0")

@@ -11,9 +11,6 @@ import json
 
 def get_info(kode_saham):
     try:
-        args = request.args
-        kode_saham = args.get("kode_saham")
-
         info = Ticker(kode_saham)
 
         tentangPerusahaan = "-"

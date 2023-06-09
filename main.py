@@ -38,6 +38,9 @@ def build_gru_prediction(kode_saham):
 
 @app.route("/info", methods = ['GET'])
 def get_info_info():
+    args = request.args
+    kode_saham = args.get("kode_saham", type=str)
+
     return get_info(kode_saham)
 
 @app.route("/grafik", methods = ['GET'])

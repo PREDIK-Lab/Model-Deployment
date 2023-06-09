@@ -19,8 +19,7 @@ def index():
 
 def build():
     result = build_lstm_model("BBYB.JK")
-
-    return result
+    result = build_gru_model("BBYB.JK")
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=build, trigger="interval", minutes=10)

@@ -39,7 +39,7 @@ def get_info(kode_saham):
 
         #return info.summary_profile[kode_saham]#['previousClose']
 
-        data = {
+        response = {
             "success": True,
             "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
@@ -50,7 +50,7 @@ def get_info(kode_saham):
             "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
         }
     except:
-        data = {
+        response = {
             "success": True,
             "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
@@ -61,4 +61,4 @@ def get_info(kode_saham):
             "tanggal_dividen_terakhir": "-", 
         }
     finally:
-        return data
+        return response

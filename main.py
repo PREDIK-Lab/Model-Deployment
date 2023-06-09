@@ -8,6 +8,7 @@ from yahoo_earnings_calendar import YahooEarningsCalendar
 from yahooquery import Ticker
 from pytanggalmerah import TanggalMerah
 from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
+from multiprocessing import Process, Queue
 import os
 import asyncio
 import datetime
@@ -107,23 +108,21 @@ def get_graph_info():
 @app.route("/prediksi", methods = ['GET'])
 def predict():
     args = request.args
-    kode_saham = args.get("kode_saham", type=str) #'BBYB.JK'
+    kode_saham = args.get("kode_saham", type=str)
     #kode_saham = 'BBYB.JK'
 
-    asyncio.set_event_loop(asyncio.new_event_loop())
-    loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(predict_concurrently(kode_saham))
+    # asyncio.set_event_loop(asyncio.new_event_loop())
+    # loop = asyncio.get_event_loop()
+    # result = loop.run_until_complete(predict_concurrently(kode_saham))
 
-    return result
+    return predict_concurrently(kode_saham)
 
 async def predict_concurrently(kode_saham):
-    lstm_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
-    gru_prediction = asyncio.create_task(give_gru_prediction_result(kode_saham))
-
-    lstm_prediction = await lstm_prediction
-    gru_prediction = await gru_prediction
-
-    print("")
+    lstm_prediction = Process(target=give_lstm_prediction_result, args=(kode_saham)) 
+    gru_prediction = Process(target=give_gru_prediction_result, args=(kode_saham))
+    
+    lstm_prediction.start()
+    gru_prediction.start() 
 
     if(request.method == 'GET'):
         data = {

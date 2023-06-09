@@ -1,6 +1,7 @@
 from build_model import *
 from predict_model import *
 from get_graph import *
+from get_info import *
 from flask import Flask, jsonify, request
 import yfinance as yf
 from yahoo_earnings_calendar import YahooEarningsCalendar
@@ -36,39 +37,8 @@ def build_gru_prediction(kode_saham):
     return result
 
 @app.route("/info", methods = ['GET'])
-def get_info():
-    try:
-        args = request.args
-        kode_saham = args.get("kode_saham")
-        #kode_saham = 'ARTO.JK'
-
-        info = Ticker(kode_saham)
-
-        #return info.summary_profile[kode_saham]#['previousClose']
-
-        data = {
-            "success" : True,
-            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
-            "sektor": info.summary_profile[kode_saham]['sector'],
-            "industri": info.summary_profile[kode_saham]['industry'],
-            "negara": info.summary_profile[kode_saham]['country'],
-            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
-        }
-    except:
-        data = {
-            "success" : True,
-            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'],
-            "sektor": info.summary_profile[kode_saham]['sector'],
-            "industri": info.summary_profile[kode_saham]['industry'],
-            "negara": info.summary_profile[kode_saham]['country'],
-            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            "tanggal_dividen_terakhir": "-", 
-        }
-    finally:
-        return jsonify(data)
+def get_info_info():
+    return get_info(kode_saham)
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():

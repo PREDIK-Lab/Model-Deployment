@@ -61,4 +61,4 @@ def get_info(kode_saham):
             "tanggal_dividen_terakhir": "-", 
         }
     finally:
-        return jsonify(data)
+        return data

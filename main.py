@@ -50,7 +50,7 @@ def get_graph_info():
     kode_saham = args.get("kode_saham", type=str)
     #kode_saham = 'BBYB.JK'
 
-    return get_graph(kode_saham)
+    return jsonify(get_graph(kode_saham))
 
 @app.route("/prediksi", methods = ['GET'])
 def predict():

@@ -3,6 +3,7 @@ import yfinance as yf
 from yahoo_earnings_calendar import YahooEarningsCalendar
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from flask import Flask, jsonify, request
 import pandas as pd
 import numpy as np
 import math

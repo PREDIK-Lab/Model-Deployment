@@ -12,9 +12,6 @@ import asyncio
 import datetime
 
 app = Flask(__name__)
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=build, trigger="interval", minutes=10)
-scheduler.start()
 
 @app.route('/')
 def index():
@@ -24,6 +21,10 @@ def build():
     result = build_lstm_model("BBYB.JK")
 
     return result
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=build, trigger="interval", minutes=10)
+scheduler.start()
 
 def build_lstm_prediction(kode_saham):
     result = build_lstm_model(kode_saham)

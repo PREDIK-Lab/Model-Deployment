@@ -14,9 +14,11 @@ def get_info(kode_saham):
     try:
         info = Ticker(kode_saham)
 
-        tentangPerusahaan = "-"
-        sektor = "-"
-        industri = "-"
+        global tentangPerusahaan
+        global sektor
+        global industri
+        # sektor = "-"
+        # industri = "-"
 
         if kode_saham == "BBYB.JK":
             tentangPerusahaan = "PT Bank Neo Commerce Tbk menyediakan berbagai produk dan layanan perbankan komersial di Indonesia. Perusahaan beroperasi melalui tiga segmen: Pinjaman, Pendanaan, dan Treasury. Perusahaan menawarkan produk-produk pendanaan, seperti giro, tabungan, deposito berjangka, dan on-call deposit; produk manajemen kekayaan, yang meliputi reksa dana dan layanan bank assurance; dan produk keuangan, seperti pinjaman pensiun, pinjaman channeling, pinjaman multiguna, hipotek, pinjaman pribadi, pinjaman modal kerja, pinjaman investasi, pinjaman langsung, dan layanan lainnya. Perusahaan juga menyediakan valuta asing, anjak piutang, kartu kredit, wali amanat, leasing, asuransi, dan layanan penempatan dana. Perusahaan ini sebelumnya bernama PT Bank Yudha Bhakti Tbk dan berganti nama menjadi PT Bank Neo Commerce pada September 2020. PT Bank Neo Commerce Tbk didirikan pada tahun 1989 dan berkantor pusat di Jakarta Selatan, Indonesia."

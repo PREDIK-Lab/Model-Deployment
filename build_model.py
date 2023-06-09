@@ -4,10 +4,12 @@ from yahoo_earnings_calendar import YahooEarningsCalendar
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from tensorflow import keras
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.layers import LSTM
+from keras.layers import GRU
 import pandas as pd
 import numpy as np
 import math

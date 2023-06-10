@@ -108,57 +108,46 @@ def get_graph_info():
 @app.route("/prediksi", methods = ['GET'])
 def predict():
     args = request.args
-    kode_saham = args.get("kode_saham", type=str)
+    kode_saham = args.get("kode_saham", type=str) #'BBYB.JK'
     #kode_saham = 'BBYB.JK'
 
-    # asyncio.set_event_loop(asyncio.new_event_loop())
-    # loop = asyncio.get_event_loop()
-    # result = loop.run_until_complete(predict_concurrently(kode_saham))
+    asyncio.set_event_loop(asyncio.new_event_loop())
+    loop = asyncio.get_event_loop()
+    result = loop.run_until_complete(predict_concurrently(kode_saham))
 
-    return predict_concurrently(kode_saham)
-
-def give_lstm_prediction_result(kode_saham, lstm_prediction_value):
-    result = predict_model(kode_saham, 'lstm')
-
-    lstm_prediction_value.value = result
-
-def give_gru_prediction_result(kode_saham, gru_prediction_value):
-    result = predict_model(kode_saham, 'gru')
-
-    gru_prediction_value.value = result
+    return result
 
 async def predict_concurrently(kode_saham):
-    lstm_prediction_value = Value({}, {})
-    lstm_prediction = Process(target=give_lstm_prediction_result, args=(kode_saham, lstm_prediction_value))
-    
-    gru_prediction_value = Value({}, {})
-    gru_prediction = Process(target=give_gru_prediction_result, args=(kode_saham))
-    
-    lstm_prediction.start()
-    gru_prediction.start() 
+    lstm_prediction = asyncio.create_task(give_lstm_prediction_result(kode_saham))
+    gru_prediction = asyncio.create_task(give_gru_prediction_result(kode_saham))
+
+    lstm_prediction = await lstm_prediction
+    gru_prediction = await gru_prediction
+
+    print("")
 
     if(request.method == 'GET'):
         data = {
             "success" : True,
-            "hasil_lstm" : "a", #lstm_prediction.values,
-            "hasil_gru" : "a", #gru_prediction.values,
+            "hasil_lstm" : lstm_prediction,
+            "hasil_gru" : gru_prediction,
         }
   
         return jsonify(data)
 
-# async def give_lstm_prediction_result(kode_saham):
-#     result = predict_model(kode_saham, 'lstm')
+async def give_lstm_prediction_result(kode_saham):
+    result = predict_model(kode_saham, 'lstm')
 
-#     await asyncio.sleep(1)
+    await asyncio.sleep(1)
 
-#     return result
+    return result
 
-# async def give_gru_prediction_result(kode_saham):
-#     result = predict_model(kode_saham, 'gru')
+async def give_gru_prediction_result(kode_saham):
+    result = predict_model(kode_saham, 'gru')
 
-#     await asyncio.sleep(1)
+    await asyncio.sleep(1)
 
-#     return result
+    return result
 
 if __name__ == '__main__':
     app.run(debug=False, port=os.getenv("PORT", default=5000), host="0.0.0.0")

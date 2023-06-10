@@ -124,7 +124,7 @@ async def predict_concurrently(kode_saham):
     lstm_prediction = await lstm_prediction
     gru_prediction = await gru_prediction
 
-    print("")
+    print("-")
 
     if(request.method == 'GET'):
         data = {

@@ -31,7 +31,7 @@ def predict_model(kode_saham, algoritma):
     tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
     last_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
-    last_date = "2023-06-05" #(pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1)) if last_date == datetime.date.today() else last_date
+    last_date = (pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1)) if last_date == datetime.date.today() else last_date
     
     start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
     current_year = datetime.date.today().strftime("%Y")
@@ -45,7 +45,7 @@ def predict_model(kode_saham, algoritma):
     start_date = datetime.date.today() if(tanggal_merah.check() or tanggal_merah.is_holiday() or tanggal_merah.is_sunday() or current_day == "Saturday") else start_date
 
     initial_date = "2017-01-01"
-    current_date = "2023-06-01" #last_date.strftime("%Y-%m-%d") #datetime.date.today()
+    current_date = last_date.strftime("%Y-%m-%d") #datetime.date.today()
     current_year = last_date.strftime("%Y")
     current_month = last_date.strftime("%m")
     current_day_date = last_date.strftime("%d")

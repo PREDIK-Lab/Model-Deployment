@@ -23,7 +23,7 @@ def predict_model(kode_saham, algoritma):
     # Fetch the data
     ticker = yf.Ticker(kode_saham)
 
-    csv_data = ticker.history(period="3")
+    csv_data = ticker.history(period="3mo")
     csv_data.head()
     csv_data['Date'] = csv_data.index
 

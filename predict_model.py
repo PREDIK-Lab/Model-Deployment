@@ -30,7 +30,7 @@ def predict_model(kode_saham, algoritma):
     graph_date = list(csv_data['Date'].values.flat)
     tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
-    last_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
+    #last_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
     last_date = (pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1)) if last_date == datetime.date.today() else last_date
     
     start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))

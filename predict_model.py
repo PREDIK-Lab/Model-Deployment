@@ -33,6 +33,8 @@ def predict_model(kode_saham, algoritma):
     last_date = "2023-07-01" #pd.to_datetime(str(graph_date[-1])) #(pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
     # last_date = (pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1)) if last_date == datetime.date.today() else last_date
     
+    print(graph_date[-1])
+
     start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
     current_year = datetime.date.today().strftime("%Y")
     current_month = datetime.date.today().strftime("%m")

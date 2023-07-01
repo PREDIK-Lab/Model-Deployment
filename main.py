@@ -7,7 +7,7 @@ import yfinance as yf
 from yahoo_earnings_calendar import YahooEarningsCalendar
 from yahooquery import Ticker
 from pytanggalmerah import TanggalMerah
-from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
 from multiprocessing import Process, Queue
 import os
 import asyncio
@@ -24,9 +24,9 @@ def build():
     result = build_lstm_model("BBYB.JK")
     result = build_gru_model("BBYB.JK")
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=build, trigger="interval", minutes=10)
-scheduler.start()
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=build, trigger="interval", minutes=10)
+# scheduler.start()
 
 def build_lstm_prediction(kode_saham):
     result = build_lstm_model(kode_saham)

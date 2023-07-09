@@ -75,9 +75,9 @@ def get_info_info():
 
         response = {
             "success": True,
-            "tentang_perusahaan": tentangPerusahaan,
-            "sektor": sektor,
-            "industri": industri,
+            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'], #tentangPerusahaan,
+            "sektor": info.summary_profile[kode_saham]['sector'], #sektor,
+            "industri": info.summary_profile[kode_saham]['industry'], #industri,
             "negara": info.summary_profile[kode_saham]['country'],
             "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
             "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
@@ -86,9 +86,9 @@ def get_info_info():
     except:
         response = {
             "success": True,
-            "tentang_perusahaan": tentangPerusahaan,
-            "sektor": sektor,
-            "industri": industri,
+            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'], #tentangPerusahaan,
+            "sektor": info.summary_profile[kode_saham]['sector'], #sektor,
+            "industri": info.summary_profile[kode_saham]['industry'], #industri,
             "negara": info.summary_profile[kode_saham]['country'],
             "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
             "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],

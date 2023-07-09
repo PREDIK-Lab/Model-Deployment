@@ -41,7 +41,7 @@ def get_info(kode_saham):
 
         response = {
             "success": True,
-            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'], #tentangPerusahaan,
+            "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
             "industri": industri,
             "negara": info.summary_profile[kode_saham]['country'],
@@ -52,7 +52,7 @@ def get_info(kode_saham):
     except:
         response = {
             "success": True,
-            "tentang_perusahaan": info.summary_profile[kode_saham]['longBusinessSummary'], #tentangPerusahaan,
+            "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
             "industri": industri,
             "negara": info.summary_profile[kode_saham]['country'],

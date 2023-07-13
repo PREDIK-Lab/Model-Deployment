@@ -106,9 +106,15 @@ def predict_model(kode_saham, algoritma):
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    modelFile = drive.CreateFile({'title':kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5', "parents": [{"id": '17yJQu6dVax8KQheDiN1zmfF1De_Z0XpG'}] })
+    model_name = ""
+    file_list = drive.ListFile({'q': "'Model' in parents and trashed=false"}).GetList()
+    
+    for item in file_list:
+        if item['title'] == kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5' :
+            model_name = item['title']
+            break
 
-    regressor = keras.models.load_model(format(modelFile.GetContentFile("model.h5")))
+    regressor = keras.models.load_model(model_name)
     #regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
     #regressor = keras.models.load_model('./bbybjk_training_model.h5')
     

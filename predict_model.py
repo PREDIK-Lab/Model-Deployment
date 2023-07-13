@@ -106,16 +106,16 @@ def predict_model(kode_saham, algoritma):
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    model_name = ""
-    file_list = drive.ListFile({'q': "'root/Model' in parents and trashed=false"}).GetList()
+    # model_name = ""
+    # file_list = drive.ListFile({'q': "'root/Model' in parents and trashed=false"}).GetList()
     
-    for item in file_list:
-        if item['title'] == kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5' :
-            model_name = item['title']
-            break
+    # for item in file_list:
+    #     if item['title'] == kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5' :
+    #         model_name = item['title']
+    #         break
 
-    regressor = keras.models.load_model(model_name)
-    #regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
+    # regressor = keras.models.load_model(model_name)
+    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
     #regressor = keras.models.load_model('./bbybjk_training_model.h5')
     
     # Generating the predictions for next 7 days

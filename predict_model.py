@@ -16,8 +16,13 @@ import numpy as np
 import math
 import datetime
 import json
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 def predict_model(kode_saham, algoritma):
+    gauth = GoogleAuth()           
+    drive = GoogleDrive(gauth)
+    
     tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
     # Fetch the data

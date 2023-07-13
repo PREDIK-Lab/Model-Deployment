@@ -21,9 +21,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():    
     gauth = GoogleAuth()           
-    drive = GoogleDrive(gauth)  
-
-    print(drive)
+    drive = GoogleDrive(gauth)
 
     return "Hai"
 

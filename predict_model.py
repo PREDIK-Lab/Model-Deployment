@@ -107,7 +107,7 @@ def predict_model(kode_saham, algoritma):
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
     model_name = ""
-    file_list = drive.ListFile({'q': "'Model' in parents and trashed=false"}).GetList()
+    file_list = drive.ListFile({'q': "'17yJQu6dVax8KQheDiN1zmfF1De_Z0XpG' in parents and trashed=false"}).GetList()
     
     for item in file_list:
         if item['title'] == kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5' :

@@ -108,7 +108,7 @@ def predict_model(kode_saham, algoritma):
 
     modelFile = drive.CreateFile({'title':kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5', "parents": [{"id": '17yJQu6dVax8KQheDiN1zmfF1De_Z0XpG'}] })
 
-    regressor = keras.models.load_model(modelFile)
+    regressor = keras.models.load_model(modelFile.GetContentFile())
     #regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
     #regressor = keras.models.load_model('./bbybjk_training_model.h5')
     

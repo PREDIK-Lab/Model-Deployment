@@ -13,11 +13,18 @@ import os
 import asyncio
 import datetime
 import json
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 app = Flask(__name__)
 
 @app.route('/')
-def index():
+def index():    
+    gauth = GoogleAuth()           
+    drive = GoogleDrive(gauth)  
+
+    print(drive)
+
     return "Hai"
 
 def build():

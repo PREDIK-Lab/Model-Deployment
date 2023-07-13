@@ -20,10 +20,30 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():    
-    gauth = GoogleAuth()           
-    drive = GoogleDrive(gauth)
+    gauth = GoogleAuth()
+    # gauth.LocalWebserverAuth()
 
-    return "Hai"
+    gauth.LoadCredentialsFile("credentials.txt")
+
+    if gauth.credentials is None:
+        gauth.LocalWebserverAuth()
+    elif gauth.access_token_expired:
+        gauth.Refresh()
+    else:
+        gauth.Authorize()
+
+    gauth.SaveCredentialsFile("credentials.txt")
+
+    drive = GoogleDrive(gauth)
+   
+    # myFile = drive.CreateFile({'title':'output_sasasasa.xlsx', "parents": [{"id": '1pzschX3uMbxU0lB5WZ6IlEEeAUE8MZ-t'}] })
+    # myFile.Upload()
+    file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+
+    for file1 in file_list:
+        print('title: %s, id: %s' % (file1['title'], file1['id']))
+
+    return 'Hai'
 
 def build():
     result = build_lstm_model("BBYB.JK")

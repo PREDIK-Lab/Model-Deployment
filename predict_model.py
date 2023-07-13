@@ -20,9 +20,21 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
 def predict_model(kode_saham, algoritma):
-    gauth = GoogleAuth()           
+    gauth = GoogleAuth()     
+
+    gauth.LoadCredentialsFile("credentials.txt")
+
+    if gauth.credentials is None:
+        gauth.LocalWebserverAuth()
+    elif gauth.access_token_expired:
+        gauth.Refresh()
+    else:
+        gauth.Authorize()
+
+    gauth.SaveCredentialsFile("credentials.txt")
+
     drive = GoogleDrive(gauth)
-    
+
     tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
     # Fetch the data
@@ -94,7 +106,10 @@ def predict_model(kode_saham, algoritma):
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
+    modelFile = drive.CreateFile({'title':kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5', "parents": [{"id": '17yJQu6dVax8KQheDiN1zmfF1De_Z0XpG'}] })
+
+    regressor = keras.models.load_model(modelFile)
+    #regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
     #regressor = keras.models.load_model('./bbybjk_training_model.h5')
     
     # Generating the predictions for next 7 days

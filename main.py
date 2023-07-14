@@ -67,8 +67,6 @@ def get_info_info():
     args = request.args
     kode_saham = args.get("kode_saham", type=str)
 
-    # return get_info(kode_saham)
-
     try:
         info = Ticker(kode_saham)
 
@@ -77,9 +75,6 @@ def get_info_info():
         global industri
         # sektor = "-"
         # industri = "-"
-
-        print("Cobaaaa")
-        print(str(info.summary_profile[kode_saham]['longBusinessSummary']))
 
         if kode_saham == "BBYB.JK":
             tentangPerusahaan = "PT Bank Neo Commerce Tbk menyediakan berbagai produk dan layanan perbankan komersial di Indonesia. Perusahaan beroperasi melalui tiga segmen: Pinjaman, Pendanaan, dan Treasury. Perusahaan menawarkan produk-produk pendanaan, seperti giro, tabungan, deposito berjangka, dan on-call deposit; produk manajemen kekayaan, yang meliputi reksa dana dan layanan bank assurance; dan produk keuangan, seperti pinjaman pensiun, pinjaman channeling, pinjaman multiguna, hipotek, pinjaman pribadi, pinjaman modal kerja, pinjaman investasi, pinjaman langsung, dan layanan lainnya. Perusahaan juga menyediakan valuta asing, anjak piutang, kartu kredit, wali amanat, leasing, asuransi, dan layanan penempatan dana. Perusahaan ini sebelumnya bernama PT Bank Yudha Bhakti Tbk dan berganti nama menjadi PT Bank Neo Commerce pada September 2020. PT Bank Neo Commerce Tbk didirikan pada tahun 1989 dan berkantor pusat di Jakarta Selatan, Indonesia."
@@ -100,11 +95,13 @@ def get_info_info():
 
         #return info.summary_profile[kode_saham]#['previousClose']
 
+        # return str(info.summary_profile[kode_saham]['country'])
+
         response = {
             "success": True,
-            "tentang_perusahaan": tentangPerusahaan,
-            "sektor": sektor,
-            "industri": industri,
+            "tentang_perusahaan": "Bank",
+            "sektor": "Layanan Keuangan",
+            "industri": "Bank Regional",
             "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
             "alamat": "Alamat",
             # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
@@ -118,15 +115,16 @@ def get_info_info():
     except:
         response = {
             "success": True,
-            "tentang_perusahaan": tentangPerusahaan,
-            "sektor": sektor,
-            "industri": industri,
+            "tentang_perusahaan": "Bank",
+            "sektor": "Layanan Keuangan",
+            "industri": "Bank Regional",
             "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
             "alamat": "Alamat",
             # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
             "jumlah_pegawai": "10 pegawai",
             "tanggal_dividen_terakhir": "-",
             # "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+            # "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
         }
 
         return jsonify(response)

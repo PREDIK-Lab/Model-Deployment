@@ -53,7 +53,8 @@ def predict_model(kode_saham, algoritma):
     print(graph_date[-1:])
 
     # start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 2))
-    start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
+    # start_date = (pd.to_datetime(str(graph_date[-1])) + datetime.timedelta(days = 1))
+    start_date = (pd.to_datetime(str(last_date)) + datetime.timedelta(days = 1))
     current_year = datetime.date.today().strftime("%Y")
     current_month = datetime.date.today().strftime("%m")
     current_day_date = datetime.date.today().strftime("%d")

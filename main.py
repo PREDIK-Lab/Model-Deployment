@@ -20,20 +20,20 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():    
-    gauth = GoogleAuth()
+    # gauth = GoogleAuth()
 
-    gauth.LoadCredentialsFile("credentials.txt")
+    # gauth.LoadCredentialsFile("credentials.txt")
 
-    if gauth.credentials is None:
-        gauth.LocalWebserverAuth()
-    elif gauth.access_token_expired:
-        gauth.Refresh()
-    else:
-        gauth.Authorize()
+    # if gauth.credentials is None:
+    #     gauth.LocalWebserverAuth()
+    # elif gauth.access_token_expired:
+    #     gauth.Refresh()
+    # else:
+    #     gauth.Authorize()
 
-    gauth.SaveCredentialsFile("credentials.txt")
+    # gauth.SaveCredentialsFile("credentials.txt")
 
-    drive = GoogleDrive(gauth)
+    # drive = GoogleDrive(gauth)
    
     # myFile = drive.CreateFile({'title':'output_sasasasa.xlsx', "parents": [{"id": '1pzschX3uMbxU0lB5WZ6IlEEeAUE8MZ-t'}] })
     # myFile.Upload()

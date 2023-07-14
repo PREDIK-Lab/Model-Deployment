@@ -20,20 +20,20 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
 def predict_model(kode_saham, algoritma):
-    gauth = GoogleAuth()     
+    # gauth = GoogleAuth()     
 
-    gauth.LoadCredentialsFile("credentials.txt")
+    # gauth.LoadCredentialsFile("credentials.txt")
 
-    if gauth.credentials is None:
-        gauth.LocalWebserverAuth()
-    elif gauth.access_token_expired:
-        gauth.Refresh()
-    else:
-        gauth.Authorize()
+    # if gauth.credentials is None:
+    #     gauth.LocalWebserverAuth()
+    # elif gauth.access_token_expired:
+    #     gauth.Refresh()
+    # else:
+    #     gauth.Authorize()
 
-    gauth.SaveCredentialsFile("credentials.txt")
+    # gauth.SaveCredentialsFile("credentials.txt")
 
-    drive = GoogleDrive(gauth)
+    # drive = GoogleDrive(gauth)
 
     tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 

@@ -99,26 +99,28 @@ def get_info_info():
 
         return str(info.summary_profile[kode_saham]['country'])
 
-        # response = {
-        #     "success": True,
-        #     "tentang_perusahaan": tentangPerusahaan,
-        #     "sektor": sektor,
-        #     "industri": industri,
-        #     "negara": info.summary_profile[kode_saham]['country'],
-        #     "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-        #     "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-        #     "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
-        # }
+        response = {
+            "success": True,
+            "tentang_perusahaan": tentangPerusahaan,
+            "sektor": sektor,
+            "industri": industri,
+            "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
+            "alamat": "Alamat",
+            # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
+            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+            "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
+        }
 
-        # return jsonify(response)
+        return jsonify(response)
     except:
         response = {
             "success": True,
             "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
             "industri": industri,
-            "negara": info.summary_profile[kode_saham]['country'],
-            "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
+            "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
+            "alamat": "Alamat",
+            # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
             "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
             "tanggal_dividen_terakhir": "-", 
         }

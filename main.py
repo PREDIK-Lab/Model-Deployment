@@ -97,6 +97,8 @@ def get_info_info():
 
         #return info.summary_profile[kode_saham]#['previousClose']
 
+        return str(info.summary_profile[kode_saham]['country'])
+
         response = {
             "success": True,
             "tentang_perusahaan": tentangPerusahaan,

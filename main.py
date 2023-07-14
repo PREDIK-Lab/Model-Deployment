@@ -107,8 +107,10 @@ def get_info_info():
             "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
             "alamat": "Alamat",
             # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
+            "jumlah_pegawai": "10 pegawai",
+            "tanggal_dividen_terakhir": "-",
+            # "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
+            # "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
         }
 
         return jsonify(response)
@@ -121,8 +123,9 @@ def get_info_info():
             "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
             "alamat": "Alamat",
             # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            "tanggal_dividen_terakhir": "-", 
+            "jumlah_pegawai": "10 pegawai",
+            "tanggal_dividen_terakhir": "-",
+            # "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
         }
 
         return jsonify(response)

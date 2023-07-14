@@ -97,27 +97,31 @@ def get_info_info():
 
         #return info.summary_profile[kode_saham]#['previousClose']
 
-        return jsonify({
+        response = {
             "success": True,
             "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
             "industri": industri,
-            "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
+            "negara": info.summary_profile[kode_saham]['country'],
             "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
             "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
             "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
-        })
+        }
+
+        return jsonify(response)
     except:
-        return jsonify({
+        response = {
             "success": True,
             "tentang_perusahaan": tentangPerusahaan,
             "sektor": sektor,
             "industri": industri,
-            "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
+            "negara": info.summary_profile[kode_saham]['country'],
             "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
             "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
             "tanggal_dividen_terakhir": "-", 
-        })
+        }
+
+        return jsonify(response)
     # finally:
     #     return jsonify(response)
 

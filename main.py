@@ -68,14 +68,12 @@ def get_info_info():
     kode_saham = args.get("kode_saham", type=str)
 
     try:
-        info = Ticker(kode_saham)
+        info = yf.Ticker(kode_saham)
 
         global tentangPerusahaan
         global sektor
         global industri
-        # sektor = "-"
-        # industri = "-"
-
+        
         if kode_saham == "BBYB.JK":
             tentangPerusahaan = "PT Bank Neo Commerce Tbk menyediakan berbagai produk dan layanan perbankan komersial di Indonesia. Perusahaan beroperasi melalui tiga segmen: Pinjaman, Pendanaan, dan Treasury. Perusahaan menawarkan produk-produk pendanaan, seperti giro, tabungan, deposito berjangka, dan on-call deposit; produk manajemen kekayaan, yang meliputi reksa dana dan layanan bank assurance; dan produk keuangan, seperti pinjaman pensiun, pinjaman channeling, pinjaman multiguna, hipotek, pinjaman pribadi, pinjaman modal kerja, pinjaman investasi, pinjaman langsung, dan layanan lainnya. Perusahaan juga menyediakan valuta asing, anjak piutang, kartu kredit, wali amanat, leasing, asuransi, dan layanan penempatan dana. Perusahaan ini sebelumnya bernama PT Bank Yudha Bhakti Tbk dan berganti nama menjadi PT Bank Neo Commerce pada September 2020. PT Bank Neo Commerce Tbk didirikan pada tahun 1989 dan berkantor pusat di Jakarta Selatan, Indonesia."
             sektor = "Layanan Keuangan"
@@ -89,26 +87,15 @@ def get_info_info():
             sektor = "Layanan Keuangan"
             industri = "Bank Regional"
 
-        # info.summary_profile[kode_saham]['longBusinessSummary']
-        # info.summary_profile[kode_saham]['sector']
-        # info.summary_profile[kode_saham]['industry']
-
-        #return info.summary_profile[kode_saham]#['previousClose']
-
-        # return str(info.summary_profile[kode_saham]['country'])
-
         response = {
             "success": True,
-            "tentang_perusahaan": "Bank",
-            "sektor": "Layanan Keuangan",
-            "industri": "Bank Regional",
-            "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
-            "alamat": "Alamat",
-            # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": 10,
-            "tanggal_dividen_terakhir": "-",
-            # "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            # "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
+            "tentang_perusahaan": tentangPerusahaan,
+            "sektor": sektor,
+            "industri": industri,
+            "negara": info.info['country'],
+            "alamat": info.info['address1'] + ", " + info.info['address2'] +  ", " + info.info['city'] + ", " + info.info['country'],
+            "jumlah_pegawai": info.info['fullTimeEmployees'],
+            "tanggal_dividen_terakhir": info.info['exDividendDate'], 
         }
 
         return jsonify(response)
@@ -118,13 +105,10 @@ def get_info_info():
             "tentang_perusahaan": "Bank",
             "sektor": "Layanan Keuangan",
             "industri": "Bank Regional",
-            "negara": "Indonesia", #info.summary_profile[kode_saham]['country'],
-            "alamat": "Alamat",
-            # "alamat": info.summary_profile[kode_saham]['address1'] + ", " + info.summary_profile[kode_saham]['address2'] +  ", " + info.summary_profile[kode_saham]['city'] + ", " + info.summary_profile[kode_saham]['country'],
-            "jumlah_pegawai": 10,
-            "tanggal_dividen_terakhir": "-",
-            # "jumlah_pegawai": info.summary_profile[kode_saham]['fullTimeEmployees'],
-            # "tanggal_dividen_terakhir": info.summary_detail[kode_saham]['exDividendDate'], 
+             "negara": info.info['country'],
+            "alamat": info.info['address1'] + ", " + info.info['address2'] +  ", " + info.info['city'] + ", " + info.info['country'],
+            "jumlah_pegawai": info.info['fullTimeEmployees'],
+            "tanggal_dividen_terakhir": "-", 
         }
 
         return jsonify(response)

@@ -112,8 +112,6 @@ def get_info_info():
         }
 
         return jsonify(response)
-    # finally:
-    #     return jsonify(response)
 
 @app.route("/grafik", methods = ['GET'])
 def get_graph_info():

@@ -21,11 +21,11 @@ Pytanggalmerah==2.0.1
 scikit-image==0.19.3
 scikit-learn==1.2.0
 scipy==1.9.1
-tensorboard==2.11.0
-tensorboard-data-server==0.6.1
+tensorboard==2.13.0
+tensorboard-data-server==0.7.1
 tensorboard-plugin-wit==1.8.1
-tensorflow==2.11.0
-tensorflow-estimator==2.11.0
+tensorflow==2.13.0
+tensorflow-estimator==2.13.0
 Werkzeug==1.0.1
 yahooquery==2.3.0
 yahoo-earnings-calendar==0.6.0

@@ -16,8 +16,8 @@ import numpy as np
 import math
 import datetime
 import json
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
+# from pydrive.auth import GoogleAuth
+# from pydrive.drive import GoogleDrive
 
 def predict_model(kode_saham, algoritma):
     # gauth = GoogleAuth()     

@@ -16,25 +16,8 @@ import numpy as np
 import math
 import datetime
 import json
-# from pydrive.auth import GoogleAuth
-# from pydrive.drive import GoogleDrive
 
 def predict_model(kode_saham, algoritma):
-    # gauth = GoogleAuth()     
-
-    # gauth.LoadCredentialsFile("credentials.txt")
-
-    # if gauth.credentials is None:
-    #     gauth.LocalWebserverAuth()
-    # elif gauth.access_token_expired:
-    #     gauth.Refresh()
-    # else:
-    #     gauth.Authorize()
-
-    # gauth.SaveCredentialsFile("credentials.txt")
-
-    # drive = GoogleDrive(gauth)
-
     tanggal_merah = TanggalMerah(cache_path = None, cache_time = 600) # cache_path = None berarti directory cache automatis
 
     # Fetch the data
@@ -67,18 +50,13 @@ def predict_model(kode_saham, algoritma):
     current_month = last_date.strftime("%m")
     current_day_date = last_date.strftime("%d")
 
-    #return current_year #current_date + datetime.timedelta(days=1)
-
     ticker = kode_saham
     csv_data = yf.download(ticker, initial_date, last_date)
     csv_data.head()
 
-    # Create the data
+    # Creating the data
     csv_data['TradeDate'] = csv_data.index
     
-    # Plot the stock prices
-    # csv_data.plot(x='TradeDate', y='Close', kind='line', figsize=(20,6), rot=20)
-
     full_data = csv_data[['Close']].values
     # print(full_data[-15:])
     
@@ -100,30 +78,19 @@ def predict_model(kode_saham, algoritma):
 
     n_sample = 1
     time_step = x_test.shape[0]
-    n_feature = x_test.shape[1]    
+    n_feature = x_test.shape[1] 
+
     # Reshaping the data as 3D input
     x_test = x_test.reshape(n_sample, time_step, n_feature)
 
-    # model_name = ""
-    # file_list = drive.ListFile({'q': "'root/Model' in parents and trashed=false"}).GetList()
-    
-    # for item in file_list:
-    #     if item['title'] == kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5' :
-    #         model_name = item['title']
-    #         break
-
-    # regressor = keras.models.load_model(model_name)
-    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + initial_date + '_' + current_date + '.h5')
-    #regressor = keras.models.load_model('./bbybjk_training_model.h5')
+    # Finding the model according to the path and the model's name
+    regressor = keras.models.load_model('./model/' + kode_saham.replace('.', '').lower() + '_training_' + algoritma + '_model_' + current_date + '.h5')
     
     # Generating the predictions for next 7 days
     predicted_seven = regressor.predict(x_test)
 
     # Generating the prices in original scale
     predicted_seven = data_scaler.inverse_transform(predicted_seven)
-
-    # print(predicted_seven)
-    # print(actual_seven)
     
     rmse = np.sqrt(np.mean(((predicted_seven - actual_seven) ** 2)))
 
@@ -175,12 +142,6 @@ def predict_model(kode_saham, algoritma):
 
             i += 1
 
-    # for i in list_predict:
-    #     list_predict.append({
-    #         "tanggal": "1",
-    #         "prediksi_harga_penutupan": float(i)
-    #     })    
-
     for i, j in enumerate(list_predict):
         list_predict_date.append({
             "tanggal": list_date[i],
@@ -188,13 +149,6 @@ def predict_model(kode_saham, algoritma):
         })    
 
     datetime.date.today().strftime("%Y-%m-%d")
-
-    # json_str = json.dumps({
-    #     "prediksi": list_predict,
-    #     "rmse": rmse
-    # })
-
-    #return json.loads(json_str)
 
     return {
         "harga_penutupan_sebelumnya": json.dumps(float(full_data[-2])),
